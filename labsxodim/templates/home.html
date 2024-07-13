@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+    <meta charset="UTF-8">
+    <title>sxodim</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+<body>
+<nav class="navbar">
+    <ul class="nav-links">
+        <div class="menu">
+            <div class="logo">
+                <a href="{% url '' %}"><img src="{% static 'images/logo.png' %}" class="logo-image"></a>
+            </div>
+            <li>
+                <form method="get" action="{% url 'item_search' %}">
+					<input type="text2" placeholder="Поиск" class="search-box" name="search_query">
+					<br>
+					<label for="min_price">Минимальная цена:</label>
+			        <input type="numbe2r" name="min_price" id="min_price" style="width: 50px;
+			  padding: 8px 12px;
+			  border: 1px solid #ccc;
+			  border-radius: 5px;
+			  font-size: 16px;" value="{{ min_price }}">
+								<label for="max_price">Максимальная цена:</label>
+			          <input type="number2" name="max_price" id="max_price" style="width: 50px;
+			  padding: 8px 12px;
+			  margin-right: 10px;
+			  border: 1px solid #ccc;
+			  border-radius: 5px;
+			  font-size: 16px;" value="{{ max_price }}">
+			  <button type="submit" style="background-color: rgb(236, 102, 82);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;">Найти</button>
+				</form>
+
+            </li>
+            <li><a class="header-store">
+                <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32px" height="32px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#231F20" d="M32,0C18.746,0,8,10.746,8,24c0,5.219,1.711,10.008,4.555,13.93c0.051,0.094,0.059,0.199,0.117,0.289l16,24 C29.414,63.332,30.664,64,32,64s2.586-0.668,3.328-1.781l16-24c0.059-0.09,0.066-0.195,0.117-0.289C54.289,34.008,56,29.219,56,24 C56,10.746,45.254,0,32,0z M32,32c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8S36.418,32,32,32z"></path> </g></svg>
+                <div class="labels">
+                    <div>Алматы</div>
+
+                </div>
+                 <div class="labels">
+                    <div>Афиша</div>
+                    
+                </div>
+                 <div class="labels">
+                    <div>Журнал</div>
+                    
+                </div>
+            </a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}">{{ request.user }}</a></li>
+            <li><button ><a href="{% url 'logout' %}">Выйти</a></button></li>
+            {% else %}
+            <li><button ><a href="{% url 'login' %}">Войти</a></button></li>
+            {% endif %}
+        </div>
+    </ul>
+</nav>
+<section style="padding-top: 20px;
+    display: flex;
+    margin: 0 auto;
+    justify-content: revert;">
+    	{% if user.is_authenticated %}
+		<a style="background-color:  rgb(236, 102, 82);color: white;padding: 10px 20px;text-align: center;text-decoration: none;display: inline-block; align-content: center;align-items: center; justify-content:;" 
+  			href="{% url 'item_request_list' %}">Список объявлении</a>
+  		{% endif %}
+  		{% if user.is_staff %}
+  		<a style="background-color:  rgb(236, 102, 82);color: white;padding: 10px 20px;text-decoration: none;display: inline-block;margin-left: 70px;" 
+  			href="{% url 'user_list' %}">Пользователи</a>
+  			{% endif %}
+
+	</section>
+	{% block content %}
+		    {% if user.is_staff %}
+				<section style="
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
+">
+					<a style="background-color:  rgb(236, 102, 82);color: white;padding: 10px 20px;text-align: center;text-decoration: none;display: inline-block; align-content: center; align-items: center;" href="{% url 'add_item' %}">Добавить объявление</a>
+				</section>
+				{% else %}
+					{% if user.is_authenticated %}
+							<section style="
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
+">
+								<a style="background-color:  rgb(236, 102, 82);color: white;padding: 10px 20px;text-align: center;text-decoration: none;display: inline-block; align-content: center; align-items: center;" href="{% url 'create_item_request' %}">Разместить объявление</a>
+							</section>
+						{% else %}
+					{% endif %}	
+				{% endif %}
+		  {% endblock content %}
+<div class="container">
+    <br>
+		    {% for item in items %}
+      			<div class="box">
+				        <img src="{{ item.picture.url }}" class="product-img">
+
+				        <a href="{% url 'detail' pk=item.pk %}" class="desc">{{ item.name }}</a>
+				        <p class="price">₸{{ item.price|floatformat }}</p>
+				        {% if user.is_staff %}
+			  	<a href="{% url 'delete' pk=item.pk %}" data-method="delete">
+			  		Удалить
+			    </a>
+			    <a href="{% url 'update' pk=item.pk %}" data-method="delete">
+			    	Изменить
+		        </a>
+		        {% else %}
+
+				{% endif %}
+				    </div>
+    		{% endfor %}
+
+</div>
+{% load custom_filters %}
+
+<h2 style="text-align: center; font-size: 30px; padding-top: 30px;">История:</h2>
+{% if request.session.last_viewed_items %}
+  <ul>
+  	<div class="cards">
+    {% for item_id in request.session.last_viewed_items|slice:":4" %}
+      {% with item=item_id|get_item_by_id %}
+        
+        <div class="box">
+			<img src="{{ item.picture.url }}" class="product-img">
+	        <a href="{% url 'detail' pk=item.pk %}" class="desc">{{ item.name }}</a>
+			<p class="price">₸{{ item.price|floatformat }}</p>
+		</div>		
+        	
+        
+      {% endwith %}
+    {% endfor %}
+	</div>
+  </ul>
+{% else %}
+{% endif %}
+
+</body>
+
+</html>

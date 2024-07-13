@@ -1,0 +1,79 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<div class="container">
+    <hr>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            {% if item_requests %}
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Picture</th>
+                            <th scope="col">Status</th>
+                            {% if request.user.is_staff %}
+                                <th scope="col">Actions</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item_request in item_requests %}
+                            <tr>
+                                <td>{{ item_request.name }}</td>
+                                <td>{{ item_request.price }}</td>
+                                <td>{{ item_request.description }}</td>
+                                <td>
+                                    {% if item_request.picture %}
+                                        <img src="{{ item_request.picture.url }}" style="height: 50px;" alt="{{ item_request.name }}" class="img-fluid">
+                                    {% else %}
+                                        <span class="text-muted">No picture available</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item_request.status == 'pending' %}
+                                        <span class="badge badge-pill badge-warning">Pending</span>
+                                    {% elif item_request.status == 'approved' %}
+                                        <span class="badge badge-pill badge-success">Approved</span>
+                                    {% else %}
+                                        <span class="badge badge-pill badge-danger">Rejected</span>
+                                    {% endif %}
+                                </td>
+                                {% if request.user.is_staff %}
+                                    <td>
+                                        {% if item_request.status == 'pending' %}
+                                            <a href="{% url 'approve_item_request' item_request.id %}" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Approve</a>
+                                            <a href="{% url 'reject_item_request' item_request.id %}" class="btn btn-sm btn-danger"><i class="fas fa-times"></i> Reject</a>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6">No item requests found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="lead">No item requests found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge-pill {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    td, th {
+      padding: 8px;
+    }
+</style>
+{% endblock %}

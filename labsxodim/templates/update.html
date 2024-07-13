@@ -1,0 +1,76 @@
+{% extends 'home.html' %} {% block content %}
+<div class="add-item-container">
+  <form class="formupdate" method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Save changes</button>
+</form>
+</div>
+{% block styles %}
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+    .add-item-container {
+        padding-top: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        width: 660px;
+        padding: 8% 0 0;
+        margin: auto;
+    }
+    .add-item-container h1 {
+      color: black;
+    }
+    .formupdate {
+      width: 50%;
+      background-color: #f2f2f2;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    button[type="submit"] {
+      background-color: rgb(236, 102, 82);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #3e8e41;
+    }
+
+    .errorlist {
+      color: red;
+      margin-top: 5px;
+      margin-bottom: 0;
+    }
+
+    .errorlist li {
+      margin-left: 15px;
+      list-style: circle;
+    }
+  </style>
+{% endblock %}
+{% endblock %}

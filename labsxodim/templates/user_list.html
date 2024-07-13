@@ -1,0 +1,49 @@
+{% extends 'home.html' %}
+{% block content %}
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Picture</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          {% if user.profile.picture %}
+            <td><img style="border-radius: 50%" src="{{ user.profile.picture.url }}" width="50px" height="50px"></td>
+          
+          {% endif %}
+          <td>
+            <a href="{% url 'user_edit' user.id %}">Edit</a> |
+            <a href="{% url 'user_delete' user.id %}">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% block styles %} 
+  <style type="text/css">
+   .badge-pill {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    td, th {
+      padding: 8px;
+    }
+
+
+  </style>
+{% endblock %}
+{% endblock %}

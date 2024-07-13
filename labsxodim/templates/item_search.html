@@ -1,0 +1,10 @@
+{% extends 'home.html' %}
+
+<h1>Search Results for "{{query}}"</h1>
+<ul>
+{% for item in items %}
+    <li>{{ item.name }}</li>
+{% empty %}
+    <li>No items found</li>
+{% endfor %}
+</ul>
